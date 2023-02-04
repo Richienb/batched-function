@@ -1,4 +1,4 @@
-# batch-fn
+# batched-function
 
 > Batch multiple function calls into a single one
 
