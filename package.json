@@ -10,9 +10,9 @@
 		"node": ">=14"
 	},
 	"scripts": {
-		"build": "tsc --build --clean",
+		"build": "del-cli dist && tsc",
 		"test": "xo && ava",
-		"prepublishOnly": "tsc --build --clean"
+		"prepublishOnly": "del-cli dist && tsc"
 	},
 	"files": [
 		"dist"
@@ -26,6 +26,7 @@
 	"devDependencies": {
 		"@sindresorhus/tsconfig": "^3.0.1",
 		"ava": "^5.1.1",
+		"del-cli": "^5.0.0",
 		"p-defer": "^4.0.0",
 		"time-span": "^5.1.0",
 		"ts-node": "^10.9.1",
