@@ -35,9 +35,9 @@ After a value is passed, `function_` is called `interval` milliseconds later wit
 
 Type: `object`
 
-##### interval
+##### delay
 
 Type: `number`\
-Default: `0`
+Default: `undefined`
 
-Interval in milliseconds to wait before calling the function with the values.
+Delay in milliseconds to wait before calling the function with the values. If `undefined`, which is by default, the function is called after [`Promise.resolve()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve).

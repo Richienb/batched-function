@@ -1,12 +1,18 @@
 export type Options = {
 	/**
-	Interval in milliseconds to wait before calling the function with the values.
+	Delay in milliseconds to wait before calling the function with the values. If `undefined`, which is by default, the function is called after [`Promise.resolve()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve).
 
 	@type number
-	@default 0
+	@default undefined
 	*/
-	interval?: number;
+	delay?: number | undefined;
 };
+
+function createDelay(interval: number): () => Promise<void> {
+	return async () => new Promise(resolve => {
+		setTimeout(resolve, interval);
+	});
+}
 
 /**
 Batch multiple function calls into a single one. After a value is passed, `function_` is called `interval` milliseconds later with an array of all the values passed in that time, including the first one.
@@ -27,10 +33,12 @@ batched('🐻');
 // Logs ['🦄', '🌈', '🐻']
 ```
 */
-export default function batchedFunction<ValueType>(function_: (value: ValueType[]) => unknown, {interval = 0}: Options = {}): (value: ValueType) => void {
-	if (typeof interval !== 'number') {
-		throw new TypeError(`Expected \`interval\` to be of type \`number\` but received type \`${typeof interval}\``);
+export default function batchedFunction<ValueType>(function_: (value: ValueType[]) => unknown, {delay = undefined}: Options = {}): (value: ValueType) => void {
+	if (typeof delay !== 'number' && delay !== undefined) {
+		throw new TypeError(`Expected \`interval\` to be of type \`number\` but received type \`${typeof delay}\``);
 	}
+
+	const queueCall = delay === undefined ? async () => undefined : createDelay(delay);
 
 	let queue: ValueType[] = [];
 
@@ -38,12 +46,13 @@ export default function batchedFunction<ValueType>(function_: (value: ValueType[
 		queue.push(value);
 
 		if (queue.length === 1) {
-			setTimeout(() => {
+			(async () => {
+				await queueCall();
 				function_(queue);
 
 				// Values must not be removed from the original queue array because the function might still be using them.
 				queue = [];
-			}, interval);
+			})();
 		}
 	};
 }
