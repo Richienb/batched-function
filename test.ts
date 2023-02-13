@@ -34,5 +34,6 @@ test('delay', async t => {
 
 	t.deepEqual(await promise, ['🦄', '🌈', '🐻']);
 
+	// TODO: Make this test more robust to random timing errors https://github.com/Richienb/batched-function/actions/runs/4160250587/jobs/7197064874
 	t.true(end() >= 500);
 });
