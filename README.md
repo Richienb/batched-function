@@ -40,4 +40,4 @@ Type: `object`
 Type: `number`\
 Default: `undefined`
 
-Delay in milliseconds to wait before calling the function with the values. If `undefined`, which is by default, the function is called after [`Promise.resolve()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve).
+How long to wait in milliseconds before calling the function. If `undefined`, which is by default, the function is called in the next [microtask.](https://javascript.info/microtask-queue)
