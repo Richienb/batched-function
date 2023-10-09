@@ -40,4 +40,4 @@ Type: `object`
 Type: `number`\
 Default: `undefined`
 
-How long to wait in milliseconds before calling the function. If `undefined`, which is by default, the function is called in the next [microtask.](https://javascript.info/microtask-queue)
+How long to wait in milliseconds before calling the function. If `undefined`, which is by default, the function is called in the next [microtask](https://javascript.info/microtask-queue).
