@@ -7,9 +7,9 @@ export type Options = {
 	delay?: number;
 };
 
-function createDelay(interval: number): () => Promise<void> {
-	return async () => new Promise(resolve => {
-		setTimeout(resolve, interval);
+async function delay_(ms: number): Promise<void> {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
 	});
 }
 
@@ -37,8 +37,6 @@ export default function batchedFunction<ValueType>(function_: (value: ValueType[
 		throw new TypeError(`Expected \`interval\` to be of type \`number\` but received type \`${typeof delay}\``);
 	}
 
-	const queueCall = delay === undefined ? async () => undefined : createDelay(delay);
-
 	let queue: ValueType[] = [];
 
 	return value => {
@@ -46,7 +44,10 @@ export default function batchedFunction<ValueType>(function_: (value: ValueType[
 
 		if (queue.length === 1) {
 			(async () => {
-				await queueCall();
+				if (delay !== undefined) {
+					await delay_(delay);
+				}
+
 				function_(queue);
 
 				// Values must not be removed from the original queue array because the function might still be using them.

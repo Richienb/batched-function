@@ -1,12 +1,13 @@
-import test from 'ava';
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
+import test, {type ExecutionContext} from 'ava';
 import pDefer from 'p-defer';
 import timeSpan from 'time-span';
 import batchedFunction from './source/index.js';
 
-test('main', async t => {
+test('main', async (t: ExecutionContext) => {
 	const {promise, resolve} = pDefer();
 
-	const batched = batchedFunction(values => {
+	const batched = batchedFunction<string>(values => {
 		resolve(values);
 	});
 
@@ -17,10 +18,10 @@ test('main', async t => {
 	t.deepEqual(await promise, ['🦄', '🌈', '🐻']);
 });
 
-test('delay', async t => {
+test('delay', async (t: ExecutionContext) => {
 	const {promise, resolve} = pDefer();
 
-	const batched = batchedFunction(values => {
+	const batched = batchedFunction<string>(values => {
 		resolve(values);
 	}, {
 		delay: 500,
