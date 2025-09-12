@@ -2,6 +2,8 @@ export type Options = {
 	/**
 	How long to wait in milliseconds before calling the function. If `undefined`, which is by default, the function is called in the next [microtask](https://javascript.info/microtask-queue).
 
+	If `function_` returns a promise, the next batch will run after whichever of the delay or promise takes longer.
+
 	@type number
 	*/
 	delay?: number;
@@ -38,21 +40,43 @@ export default function batchedFunction<ValueType>(function_: (value: ValueType[
 	}
 
 	let queue: ValueType[] = [];
+	let isRunning = false;
 
 	return value => {
 		queue.push(value);
 
-		if (queue.length === 1) {
-			(async () => {
-				if (delay !== undefined) {
-					await delay_(delay);
-				}
+		if (isRunning) {
+			return;
+		}
 
-				function_(queue);
+		isRunning = true;
+
+		(async () => {
+			if (delay !== undefined) {
+				await delay_(delay);
+			}
+
+			do {
+				/* eslint-disable no-await-in-loop */
+				const oldQueue = queue;
 
 				// Values must not be removed from the original queue array because the function might still be using them.
 				queue = [];
-			})();
-		}
+
+				let promise = function_(oldQueue);
+
+				if (delay !== undefined) {
+					promise = Promise.all([
+						promise,
+						delay_(delay),
+					]);
+				}
+
+				await promise;
+				/* eslint-enable no-await-in-loop */
+			} while (queue.length > 0);
+
+			isRunning = false;
+		})();
 	};
 }

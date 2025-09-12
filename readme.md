@@ -31,6 +31,8 @@ batched('🐻');
 
 After a value is passed, `function_` is called `interval` milliseconds later with an array of all the values passed in that time, including the first one.
 
+If `function_` returns a promise, the next batch will run after whichever of the delay or promise takes longer.
+
 #### options
 
 Type: `object`

@@ -7,11 +7,11 @@
 	"type": "module",
 	"exports": "./dist/index.js",
 	"engines": {
-		"node": ">=14"
+		"node": ">=20"
 	},
 	"scripts": {
 		"build": "del-cli dist && tsc",
-		"test": "xo && ava && tsd",
+		"test": "xo && ava && tsc && tsd",
 		"prepublishOnly": "del-cli dist && tsc"
 	},
 	"files": [
@@ -27,10 +27,9 @@
 		"@sindresorhus/tsconfig": "^8.0.1",
 		"ava": "^6.4.1",
 		"del-cli": "^6.0.0",
-		"p-defer": "^4.0.1",
 		"time-span": "^5.1.0",
+		"ts-node": "^10.9.2",
 		"tsd": "^0.33.0",
-		"tsimp": "^2.0.12",
 		"typescript": "^5.9.2",
 		"xo": "^1.2.2"
 	},
@@ -39,7 +38,7 @@
 			"ts": "module"
 		},
 		"nodeArguments": [
-			"--import=tsimp"
+			"--import=ts-node/esm"
 		]
 	}
 }
