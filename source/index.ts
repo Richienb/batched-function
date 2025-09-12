@@ -3,9 +3,8 @@ export type Options = {
 	How long to wait in milliseconds before calling the function. If `undefined`, which is by default, the function is called in the next [microtask](https://javascript.info/microtask-queue).
 
 	@type number
-	@default undefined
 	*/
-	delay?: number | undefined;
+	delay?: number;
 };
 
 function createDelay(interval: number): () => Promise<void> {
